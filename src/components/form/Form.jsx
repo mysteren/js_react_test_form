@@ -35,9 +35,7 @@ const reducer = (state, action) => {
   switch (type) {
     case 'setFormParam':
       newState.formData[payload.key] = payload.value;
-      if (payload.error) {
-        newState.formErrors[payload.key] = payload.error;
-      }
+      newState.formErrors[payload.key] = payload.error;
       return newState;
     case 'setSengind':
       newState.sending = payload;
@@ -78,7 +76,19 @@ const Form = () => {
     }
   };
 
-  const handleChangeInput = (key, value, error) => {
+  const handleChangeInput = (key, value) => {
+    let error;
+    switch (key) {
+      case 'surname':
+        error = requireValidator(value);
+        break;
+      case 'name':
+        error = requireValidator(value);
+        break;
+      default:
+        break;
+    }
+    console.log(key, value, error);
     dispatch({
       type: 'setFormParam',
       payload: {
@@ -96,9 +106,7 @@ const Form = () => {
           label="Фамилия"
           name="surname"
           value={formData.surname}
-          error={formErrors.surname}
-          showError={showErrors}
-          validator={requireValidator}
+          error={showErrors ? formErrors.surname : ''}
           onChange={handleChangeInput}
         />
       </div>
@@ -107,8 +115,7 @@ const Form = () => {
           label="Имя"
           name="name"
           value={formData.name}
-          showError={showErrors}
-          validator={requireValidator}
+          error={showErrors ? formErrors.name : ''}
           onChange={handleChangeInput}
         />
       </div>
@@ -117,9 +124,7 @@ const Form = () => {
           label="Отчество"
           name="patronymic"
           value={formData.patronymic}
-          error={formErrors.patronymic}
-          showError={showErrors}
-          validator={requireValidator}
+          error={showErrors ? formErrors.patronymic : ''}
           onChange={handleChangeInput}
         />
       </div>
@@ -140,8 +145,7 @@ const Form = () => {
           label="Адрес постоянно регистрации"
           name="address"
           value={formData.address}
-          error={formErrors.address}
-          showError={showErrors}
+          error={showErrors ? formErrors.address : ''}
           onChange={handleChangeInput}
         />
       </div>
@@ -150,8 +154,7 @@ const Form = () => {
           label="Название роботодателя"
           name="employer"
           value={formData.employer}
-          error={formErrors.employer}
-          showError={showErrors}
+          error={showErrors ? formErrors.employer : ''}
           onChange={handleChangeInput}
         />
       </div>

@@ -23,6 +23,9 @@
   color: var(--color-green);
   transform: translate(12px, 10px) scale(0.75);
 }
+.inputContainer__label--has_value {
+  transform: translate(12px, 10px) scale(0.75);
+}
 
 .inputContainer__input {
   color: var(--color);
