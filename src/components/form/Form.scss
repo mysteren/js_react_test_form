@@ -1,5 +1,5 @@
 .form {
-  width: 800px;
+  width: 660px;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   display: grid;
@@ -10,7 +10,8 @@
     'item4 item5'
     'item6 item7'
     'item8 item8'
-    'item9 item9';
+    'item9 item9'
+    '. item10';
   grid-gap: 20px;
 }
 .form__gridItem1 {
@@ -42,4 +43,21 @@
 }
 .form__gridItem10 {
   grid-area: item10;
+}
+.form__submitButton {
+  display: block;
+  width: 100%;
+  color: white;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: 500;
+  background: var(--color-green);
+  outline: none;
+  border: none;
+  height: 66px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.form__submitButton:hover {
+  box-shadow: 1px 3px 5px 2px rgba(0,0,0,0.1);
 }

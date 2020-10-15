@@ -1,7 +1,13 @@
-import React, { useReducer, useState } from 'react';
-import BaseInput from '../BaseInput/BaseInput';
-import { requireValidator } from './validators';
-import './Form.css';
+import React, { useReducer } from 'react';
+import { cloneDeep } from 'lodash-es';
+import Input from '../Input/Input';
+import { requireValidator, phoneValidator, emailValidator } from './validators';
+import './Form.scss';
+
+const genders = [
+  { label: 'Мужской', value: 'male' },
+  { label: 'Женский', value: 'female' },
+];
 
 const initialState = {
   formData: {
@@ -20,18 +26,19 @@ const initialState = {
     surname: requireValidator(''),
     patronymic: '',
     gender: '',
-    phone: '',
-    email: '',
-    birthdate: '',
+    phone: phoneValidator(''),
+    email: emailValidator('', false),
+    birthdate: requireValidator(''),
     address: '',
     employer: '',
   },
   sending: false,
+  showErrors: false,
 };
 
 const reducer = (state, action) => {
   const { type, payload } = action;
-  const newState = { ...state };
+  const newState = cloneDeep(state);
   switch (type) {
     case 'setFormParam':
       newState.formData[payload.key] = payload.value;
@@ -39,6 +46,11 @@ const reducer = (state, action) => {
       return newState;
     case 'setSengind':
       newState.sending = payload;
+      return newState;
+    case 'refreshFormData':
+      return initialState;
+    case 'showErrors':
+      newState.showErrors = true;
       return newState;
     default:
       return state;
@@ -57,18 +69,19 @@ const isErrors = (errors) => {
 
 const Form = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { formData, formErrors, sending } = state;
-  const [showErrors, setShowErrors] = useState(false);
+  const { formData, formErrors, sending, showErrors } = state;
+  // const [showErrors, setShowErrors] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!showErrors) {
-      setShowErrors(true);
+      dispatch({ type: 'showErrors' });
     }
     if (!sending) {
       if (!isErrors(formErrors)) {
         dispatch({ type: 'setSengind', payload: true });
         setTimeout(() => {
-          dispatch({ type: 'setSengind', payload: false });
+          dispatch({ type: 'refreshFormData' });
+          // dispatch({ type: 'setSengind', payload: false });
           // eslint-disable-next-line no-alert
           alert(`Данные отправлены!' ${JSON.stringify(formData)}`);
         }, 1000);
@@ -85,10 +98,18 @@ const Form = () => {
       case 'name':
         error = requireValidator(value);
         break;
+      case 'phone':
+        error = phoneValidator(value);
+        break;
+      case 'email':
+        error = emailValidator(value, false);
+        break;
+      case 'birthdate':
+        error = requireValidator(value, false);
+        break;
       default:
         break;
     }
-    console.log(key, value, error);
     dispatch({
       type: 'setFormParam',
       payload: {
@@ -102,7 +123,7 @@ const Form = () => {
   return (
     <form className="form" onSubmit={handleSubmit}>
       <div className="form__group form__gridItem1">
-        <BaseInput
+        <Input
           label="Фамилия"
           name="surname"
           value={formData.surname}
@@ -111,7 +132,7 @@ const Form = () => {
         />
       </div>
       <div className="form__group form__gridItem2">
-        <BaseInput
+        <Input
           label="Имя"
           name="name"
           value={formData.name}
@@ -120,7 +141,7 @@ const Form = () => {
         />
       </div>
       <div className="form__group form__gridItem3">
-        <BaseInput
+        <Input
           label="Отчество"
           name="patronymic"
           value={formData.patronymic}
@@ -129,19 +150,49 @@ const Form = () => {
         />
       </div>
       <div className="form__group form__gridItem4">
-        {/* <BaseInput label="Дата рождения" /> */}
+        <Input
+          label="Пол"
+          type="select"
+          options={genders}
+          name="gender"
+          value={formData.gender}
+          error={showErrors ? formErrors.gender : ''}
+          onChange={handleChangeInput}
+        />
       </div>
       <div className="form__group form__gridItem5">
-        {/* <BaseInput label="Пол" /> */}
+        <Input
+          label="Дата рождения"
+          type="date"
+          name="birthdate"
+          value={formData.birthdate}
+          error={showErrors ? formErrors.birthdate : ''}
+          onChange={handleChangeInput}
+        />
       </div>
       <div className="form__group form__gridItem6">
-        {/* <BaseInput label="Мобильный телефон" /> */}
+        <Input
+          label="Мобильный телефон"
+          type="phone"
+          name="phone"
+          value={formData.phone}
+          error={showErrors ? formErrors.phone : ''}
+          onChange={handleChangeInput}
+        >
+          <p>asdasdas</p>
+        </Input>
       </div>
       <div className="form__group form__gridItem7">
-        {/* <BaseInput label="Email" /> */}
+        <Input
+          label="Email (необязательно)"
+          name="email"
+          value={formData.email}
+          error={showErrors ? formErrors.email : ''}
+          onChange={handleChangeInput}
+        />
       </div>
       <div className="form__group form__gridItem8">
-        <BaseInput
+        <Input
           label="Адрес постоянно регистрации"
           name="address"
           value={formData.address}
@@ -150,7 +201,7 @@ const Form = () => {
         />
       </div>
       <div className="form__group form__gridItem9">
-        <BaseInput
+        <Input
           label="Название роботодателя"
           name="employer"
           value={formData.employer}
@@ -158,7 +209,11 @@ const Form = () => {
           onChange={handleChangeInput}
         />
       </div>
-      <button type="submit">Отправить</button>
+      <div className="form__group form__gridItem10">
+        <button className="form__submitButton" type="submit">
+          {sending ? 'Отправка ...' : 'Отправить'}
+        </button>
+      </div>
     </form>
   );
 };

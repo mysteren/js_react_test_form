@@ -1,12 +1,12 @@
 import React from 'react';
 import Form from './components/form/Form';
-import './App.css';
+import './App.scss';
 
 function App() {
   return (
     <div className="App">
       <div className="container">
-        <h3>Информация о сотруднике</h3>
+        <h2>Информация о сотруднике</h2>
         <Form />
       </div>
     </div>
