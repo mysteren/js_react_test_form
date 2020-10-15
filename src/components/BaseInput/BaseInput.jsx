@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './BaseInput.css';
 
-const BaseInput = ({ label, name, value, onChange, error }) => {
+const BaseInput = ({ label, name, value, error, onChange }) => {
   const [focused, setFocused] = useState(false);
   // const [error, setError] = useState('');
 
@@ -55,16 +55,14 @@ BaseInput.propTypes = {
   name: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   value: PropTypes.any,
+  error: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  showError: PropTypes.bool,
-  validator: PropTypes.func,
 };
 
 BaseInput.defaultProps = {
   label: '',
   value: null,
-  showError: false,
-  validator: null,
+  error: '',
 };
 
 export default BaseInput;
