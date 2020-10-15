@@ -1,0 +1,45 @@
+.form {
+  width: 800px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  display: grid;
+  grid-template-areas:
+    'item1 item1'
+    'item2 item2'
+    'item3 item3'
+    'item4 item5'
+    'item6 item7'
+    'item8 item8'
+    'item9 item9';
+  grid-gap: 20px;
+}
+.form__gridItem1 {
+  grid-area: item1;
+}
+.form__gridItem2 {
+  grid-area: item2;
+}
+.form__gridItem3 {
+  grid-area: item3;
+}
+.form__gridItem4 {
+  grid-area: item4;
+}
+.form__gridItem5 {
+  grid-area: item5;
+}
+.form__gridItem6 {
+  grid-area: item6;
+}
+.form__gridItem7 {
+  grid-area: item7;
+}
+.form__gridItem8 {
+  grid-area: item8;
+}
+.form__gridItem9 {
+  grid-area: item9;
+}
+.form__gridItem10 {
+  grid-area: item10;
+}
